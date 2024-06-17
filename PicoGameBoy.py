@@ -2,10 +2,10 @@
 # A class to easily write games for the Raspberry Pi Pico Game Boy
 from machine import Pin, PWM
 from framebuf import FrameBuffer, RGB565
-from st7789 import ST7789
+from Quimera import Quimera
 from time import sleep
 
-class PicoGameBoy(ST7789):
+class PicoGameBoy(Quimera):
     def __init__(self):
         self.__up = Pin(2, Pin.IN, Pin.PULL_UP)
         self.__down = Pin(3, Pin.IN, Pin.PULL_UP)
@@ -13,9 +13,8 @@ class PicoGameBoy(ST7789):
         self.__right = Pin(5, Pin.IN, Pin.PULL_UP)
         self.__button_A = Pin(6, Pin.IN, Pin.PULL_UP)
         self.__button_B = Pin(7, Pin.IN, Pin.PULL_UP)
-        self.__buzzer = PWM(Pin(15))
-        super().__init__(width=240, height=240, id_=0, sck=18, mosi=19,
-                         dc=20, rst=21, cs=17, bl=22, baudrate=62500000)
+        self.__buzzer = PWM(Pin(13))
+        super().__init__()
         
         self.__fb=[] # Array of FrameBuffer objects for sprites
         self.__w=[]
