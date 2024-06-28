@@ -11,7 +11,7 @@ from time import sleep
 
 # Subclassing FrameBuffer provides support for graphics primitives
 # http://docs.micropython.org/en/latest/pyboard/library/framebuf.html
-class Quimera(framebuf.FrameBuffer):
+class Quimera(framebuf.FrameBuffer):   
     ROTATE = {
         0: 0x88,
         90: 0xE8,
@@ -78,8 +78,8 @@ class Quimera(framebuf.FrameBuffer):
     ENABLE3G = const(0xF2)  # Enable 3 gamma control
     PUMPRC = const(0xF7)  # Pump ratio control
 
-    def __init__(self, width=320, height=240, id_=0, sck=18, mosi=19,
-                 dc=15, rst=14, cs=17, baudrate=62500000, rotation=90):
+    def __init__(self, width=240, height=240, id_=0, sck=18, mosi=19,
+                 dc=15, rst=14, cs=17, baudrate=62500000, rotation=0):
 
         self.width = width
         self.height = height
@@ -138,6 +138,7 @@ class Quimera(framebuf.FrameBuffer):
         self.write_cmd(self.DISPLAY_ON)  # Display on
         sleep(.1)
         super().fill(0)
+        self.show()
     
     def reset_mpy(self):
         """Perform reset: Low=initialization, High=normal operation.
@@ -168,25 +169,30 @@ class Quimera(framebuf.FrameBuffer):
             self.write_data(args)
 
     def power_off(self):
-        pass
+        super().fill(0)
+        self.show()
+        self.write_cmd(self.DISPLAY_OFF)  # Turn off the display
+        sleep(.1)  # Small delay to ensure command is processed
+        self.write_cmd(self.SLPIN)  # Enter sleep mode
+        sleep(.1)  # Small delay to ensure command is processed
+
 
     def power_on(self):
         pass
 
-    def contrast(self, contrast):
+    def contrast(self , contrast):
         pass
 
-    def invert(self, invert):
+    def invert(self , invert):
         pass
 
-    def rotate(self, rotate):
+    def rotate(self , rotate):
         pass
 
     def show(self):
+        self.write_cmd(WRITE_RAM, self.buffer)
         
-        self.write_cmd(self.WRITE_RAM, self.buffer)
-
-    def color(r, g, b):
+    def color(r , g , b):
         """
         color(r, g, b) returns a 16 bits integer color code for the ST7789 display
 
@@ -210,10 +216,11 @@ class Quimera(framebuf.FrameBuffer):
 
         return (lsb << 8) | msb
 
-    def load_image(self, filename):
+    def load_image(self , filename):
         open(filename , "rb").readinto(self.buffer)
 
-    def get_pixel(self, x, y):
+    def get_pixel(self , x , y):
         byte1 = self.buffer[2 * (y * self.width + x)]
         byte2 = self.buffer[2 * (y * self.width + x) + 1]
         return byte2 * 256 + byte1
+
