@@ -301,7 +301,7 @@ def tetris_main(gameboy):
                 freq=140
             else:
                 freq=0
-            # pgb.sound(freq)
+            pgb.sound(freq)
             has_rotated = False
                 
             for i in range(4):
@@ -316,7 +316,7 @@ def tetris_main(gameboy):
                 # => game over
                 for i in range(4):
                     if prev_y[i]<=1:
-                        # pgb.sound(0)
+                        pgb.sound(0)
                         game_over_screen()
                 
                 # => Store the last good position in the field
@@ -351,17 +351,17 @@ def tetris_main(gameboy):
                 # make the line blink white <-> black
                 
                 for l in range(3):
-                    # pgb.sound(1100)
+                    pgb.sound(1100)
                     pgb.fill_rect(GRID_OFFSET*BLOCK_SIZE,i*BLOCK_SIZE,
                                   GRID_COLS*BLOCK_SIZE,BLOCK_SIZE,WHITE)
                     pgb.show()
                     time.sleep(0.050)
-                    # pgb.sound(2000)
+                    pgb.sound(2000)
                     pgb.fill_rect(GRID_OFFSET*BLOCK_SIZE,i*BLOCK_SIZE,
                                   GRID_COLS*BLOCK_SIZE,BLOCK_SIZE,BLACK)
                     pgb.show()
                     time.sleep(0.050)
-                # pgb.sound(0)
+                pgb.sound(0)
                 
         
         #####################################################################
@@ -384,7 +384,7 @@ def tetris_main(gameboy):
         # transfer the frame buffer to the actual screen over the SPI bus
         pgb.show()
 
-        # pgb.sound(0)
+        pgb.sound(0)
         global GAME_OVER
         if GAME_OVER:
             pgb.clear_ghost_array()
